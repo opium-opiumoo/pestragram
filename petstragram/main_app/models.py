@@ -1,3 +1,4 @@
+from datetime import datetime
 from wsgiref.validate import validator
 from django.db import models
 from django.core.validators import MinLengthValidator
@@ -96,6 +97,10 @@ class Pet(models.Model):
         on_delete=models.CASCADE,
     )
 
+    @property
+    def age(self):
+        return datetime.now().year - self.date_of_birth.year()
+
     class Meta:
         unique_together = ('user_profile', 'name')
 
@@ -103,7 +108,8 @@ class PetPhoto(models.Model):
     photo = models.ImageField(
         validators=(
             # image_max_size_validator,
-        )
+        ),
+        upload_to='img',
     )
     tagged_pets = models.ManyToManyField(
         Pet,
